@@ -11,7 +11,7 @@ sealed class GeneralResponse<T>(val data: T? = null, val message: String? = null
     /**
      * When we get the response successfully.
      *
-     * @param T the type of response model ex:[DictionaryResult] and its generic.
+     * @param T the type of response model ex
      * @property data the value of response from [T] type.
      */
     class Success<T>(data: T) : GeneralResponse<T>(data)
@@ -19,7 +19,7 @@ sealed class GeneralResponse<T>(val data: T? = null, val message: String? = null
     /**
      * When we want to show the loading indicator.
      *
-     * @param T the type of response model ex:[DictionaryResult] and its generic.
+     * @param T the type of response model ex
      * @property data the value of response from [T] type.
      */
     class Loading<T>(data: T? = null) : GeneralResponse<T>(data)
@@ -27,7 +27,7 @@ sealed class GeneralResponse<T>(val data: T? = null, val message: String? = null
     /**
      * When we have error
      *
-     * @param T the type of response model ex:[DictionaryResult] and its generic.
+     * @param T the type of response model ex
      * @property data the value of response from [T] type.
      * @param message the exception message
      */
