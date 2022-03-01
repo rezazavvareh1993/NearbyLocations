@@ -9,5 +9,17 @@
         android:id="@+id/nearbyPlacesFragment"
         android:name="com.example.nearbylocations.feature.nearbyplaces.NearbyPlacesFragment"
         android:label="NearbyPlacesFragment"
-        tools:layout="@layout/fragment_nearby_places"/>
+        tools:layout="@layout/fragment_nearby_places" >
+        <action
+            android:id="@+id/action_nearbyPlacesFragment_to_placeDetailFragment"
+            app:destination="@id/placeDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/placeDetailFragment"
+        android:name="com.example.nearbylocations.feature.placedetail.PlaceDetailFragment"
+        android:label="PlaceDetailFragment">
+        <argument
+            android:name="fsqId"
+            app:argType="string" />
+    </fragment>
 </navigation>

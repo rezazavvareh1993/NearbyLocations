@@ -1,9 +1,7 @@
 package com.example.nearbylocations.di
 
-import com.example.nearbylocations.data.local.repository.LocalRepository
-import com.example.nearbylocations.data.local.repository.LocalRepositoryImpl
-import com.example.nearbylocations.data.network.repository.PlaceRepository
-import com.example.nearbylocations.data.network.repository.PlaceRepositoryImpl
+import com.example.nearbylocations.data.repository.PlaceRepository
+import com.example.nearbylocations.data.repository.PlaceRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -23,6 +21,6 @@ abstract class RepositoryModule {
     @Binds
     abstract fun bindPlaceRepository(repository: PlaceRepositoryImpl): PlaceRepository
 
-    @Binds
-    abstract fun bindLocalRepository(repository: LocalRepositoryImpl): LocalRepository
+//    @Binds
+//    abstract fun bindLocalRepository(repository: LocalRepositoryImpl): LocalRepository
 }

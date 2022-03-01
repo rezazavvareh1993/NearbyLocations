@@ -20,7 +20,7 @@ interface PlacesApi {
         @Query("hacc") hacc: Double? = null,
         @Query("altitude")altitude: Double?= null,
         @Query("query")query: String?= null,
-        @Query("limit")limit: Int = 50
+        @Query("limit")limit: Int = 20
     ): NearbyPlaces
 
     /**

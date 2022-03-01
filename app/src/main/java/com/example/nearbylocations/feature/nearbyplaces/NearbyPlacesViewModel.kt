@@ -2,9 +2,9 @@ package com.example.nearbylocations.feature.nearbyplaces
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.nearbylocations.data.network.repository.PlaceRepository
-import com.example.nearbylocations.pojo.NearbyPlaces
-import com.example.nearbylocations.util.response.GeneralResponse
+import com.example.nearbylocations.data.repository.PlaceRepository
+import com.example.nearbylocations.data.local.db.PlaceItem
+import com.example.nearbylocations.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -16,12 +16,11 @@ class NearbyPlacesViewModel @Inject constructor(private val repository: PlaceRep
     ViewModel() {
 
     private val _nearbyPlaces =
-        MutableStateFlow<GeneralResponse<NearbyPlaces>>(GeneralResponse.Loading())
+        MutableStateFlow<Resource<List<PlaceItem>>>(Resource.Loading())
     val nearbyPlaces = _nearbyPlaces.asStateFlow()
-    fun nearbyPlaces() {
+    fun nearbyPlaces(ll: String) {
         viewModelScope.launch {
-            repository.nearbyPlaces()
-                .map { GeneralResponse.Success(it) }
+            repository.nearbyPlaces(ll)
                 .flowOn(Dispatchers.IO)
                 .collect { _nearbyPlaces.value = it }
         }
