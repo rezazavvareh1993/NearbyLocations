@@ -14,7 +14,8 @@ import javax.inject.Singleton
 class RoomModule {
     @Provides
     @Singleton
-    fun provideDataBase(@ApplicationContext appContext: Context) = PlaceDataBase.getInstance(appContext)
+    fun provideDataBase(@ApplicationContext appContext: Context) =
+        PlaceDataBase.getInstance(appContext)
 
     @Singleton
     @Provides
