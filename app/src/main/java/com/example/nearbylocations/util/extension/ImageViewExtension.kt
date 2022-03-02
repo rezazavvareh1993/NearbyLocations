@@ -19,6 +19,6 @@ fun ImageView.loadImage(imageUrl: String, placeholder: Int? = null) {
 
     load(uri = imageUrl, imageLoader = imageLoader) {
         crossfade(true)
-        placeholder(placeholder ?: R.drawable.ic_launcher_background)
+        placeholder(placeholder ?: R.drawable.ic_location_city)
     }
 }

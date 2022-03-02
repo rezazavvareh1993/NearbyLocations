@@ -14,7 +14,6 @@ inline fun <ResultType, RequestType> networkBoundResource(
     val flow = if (shouldFetch(data)) {
         emit(Resource.Loading())
         try {
-            delay(2000)
             saveFetchResult(fetch())
             query().map { Resource.Success(it) }
         } catch (t: Throwable) {

@@ -1,5 +1,6 @@
 package com.example.nearbylocations.data.repository
 
+import androidx.room.withTransaction
 import com.example.nearbylocations.data.local.dao.PlaceDAO
 import com.example.nearbylocations.data.local.db.PlaceDataBase
 import com.example.nearbylocations.data.local.db.PlaceItem
@@ -7,6 +8,7 @@ import com.example.nearbylocations.data.network.retrofit.PlacesApi
 import com.example.nearbylocations.pojo.PlaceDetail
 import com.example.nearbylocations.util.Resource
 import com.example.nearbylocations.util.networkBoundResource
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -19,6 +21,7 @@ interface PlaceRepository {
 
 class PlaceRepositoryImpl @Inject constructor(
     private val api: PlacesApi,
+    private val db: PlaceDataBase,
     private val dao: PlaceDAO
 ) : PlaceRepository {
 
@@ -27,6 +30,7 @@ class PlaceRepositoryImpl @Inject constructor(
             dao.getAllPlaces()
         },
         fetch = {
+            delay(2000)
             api.nearbyLocations(latitudeLongitude = ll)
         },
         saveFetchResult = {
@@ -40,8 +44,10 @@ class PlaceRepositoryImpl @Inject constructor(
                         distance = resultItem.distance.toString()
                     )
                 }
-                dao.deleteAllPlaces()
-                dao.insertPlaces(places)
+                db.withTransaction {
+                    dao.deleteAllPlaces()
+                    dao.insertPlaces(places)
+                }
             }
         }
     )

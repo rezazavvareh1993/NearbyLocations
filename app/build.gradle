@@ -79,8 +79,8 @@ dependencies {
     implementation "com.google.dagger:hilt-android:2.40.5"
     kapt "com.google.dagger:hilt-compiler:2.40.5"
 
-    // SDP
-    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+//    // SDP
+//    implementation 'com.intuit.sdp:sdp-android:1.0.6'
 
     // Room database by rx
     implementation "androidx.room:room-runtime:2.4.2"
@@ -95,6 +95,7 @@ dependencies {
 //    implementation "com.google.firebase:firebase-core"
 //    implementation 'com.google.firebase:firebase-crashlytics-ktx'
 //    implementation 'com.google.firebase:firebase-analytics-ktx'
+//    implementation "com.google.android.gms:play-services-location:15.0.1"
 
     // Moshi
     implementation "com.squareup.retrofit2:converter-moshi:2.9.0"
@@ -106,7 +107,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
 
     // Logging
-    implementation 'com.squareup.okhttp3:logging-interceptor:4.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.3'
 
 
     testImplementation 'junit:junit:4.+'
