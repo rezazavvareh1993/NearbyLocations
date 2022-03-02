@@ -6,11 +6,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.nearbylocations.databinding.ItemNearbyPlacesListBinding
-import com.example.nearbylocations.pojo.Result
+import com.example.nearbylocations.data.local.db.PlaceItem
 import com.example.nearbylocations.util.extension.loadImage
 
 class NearbyPlaceAdapter(private val getItem: (String) -> Unit) :
-    ListAdapter<Result, NearbyPlaceAdapter.NearbyPlaceViewHolder>(
+    ListAdapter<PlaceItem, NearbyPlaceAdapter.NearbyPlaceViewHolder>(
         NearbyPlaceDiffUtil()
     ) {
 
@@ -30,27 +30,24 @@ class NearbyPlaceAdapter(private val getItem: (String) -> Unit) :
         private val binding: ItemNearbyPlacesListBinding,
         private val getItem: (String) -> Unit
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bindData(data: Result) {
-            data.distance?.let { binding.distance.text = it.toString() }
+        fun bindData(data: PlaceItem) {
+            data.distance?.let { binding.distance.text = it }
             data.name?.let { binding.name.text = it }
-            data.location?.address?.let { binding.address.text = it }
-            if (!data.categories.isNullOrEmpty())
-                data.categories.first().icon?.let {
-                    binding.icon.loadImage("${it.prefix}${it.suffix}")
-                }
-            itemView.setOnClickListener { getItem(data.fsq_id) }
+            data.address?.let { binding.address.text = it }
+            data.icon?.let { binding.icon.loadImage(it) }
+            itemView.setOnClickListener { getItem(data.fsqId) }
         }
     }
 }
 
-class NearbyPlaceDiffUtil : DiffUtil.ItemCallback<Result>() {
+class NearbyPlaceDiffUtil : DiffUtil.ItemCallback<PlaceItem>() {
     override fun areItemsTheSame(
-        oldItem: Result,
-        newItem: Result
+        oldItem: PlaceItem,
+        newItem: PlaceItem
     ) = oldItem == newItem
 
     override fun areContentsTheSame(
-        oldItem: Result,
-        newItem: Result
-    ) = oldItem.fsq_id == newItem.fsq_id
+        oldItem: PlaceItem,
+        newItem: PlaceItem
+    ) = oldItem.fsqId == newItem.fsqId
 }

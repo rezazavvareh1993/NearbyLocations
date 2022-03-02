@@ -1,35 +1,32 @@
 package com.example.nearbylocations.feature.nearbyplaces
 
 import android.Manifest
-import android.content.Context
 import android.content.Context.LOCATION_SERVICE
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.location.LocationListener
+import android.location.LocationManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.example.nearbylocations.R
 import com.example.nearbylocations.base.BaseFragment
 import com.example.nearbylocations.databinding.FragmentNearbyPlacesBinding
 import com.example.nearbylocations.feature.nearbyplaces.adapter.NearbyPlaceAdapter
-import com.example.nearbylocations.util.collectLifecycleFlow
+import com.example.nearbylocations.util.*
 import dagger.hilt.android.AndroidEntryPoint
-
-import android.location.LocationListener
-import android.location.LocationManager
-import android.os.Build
-import android.util.Log
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-
-import androidx.core.content.ContextCompat.getSystemService
-import com.example.nearbylocations.util.showSnackMessage
 import java.util.*
 
 const val LOCATION_PERMISSION_REQUEST = 101
+
 /**
  * A simple [Fragment] subclass.
  * Use the [NearbyPlacesFragment.newInstance] factory method to
@@ -40,7 +37,7 @@ class NearbyPlacesFragment :
     BaseFragment<FragmentNearbyPlacesBinding>(R.layout.fragment_nearby_places) {
     private val viewModel: NearbyPlacesViewModel by viewModels()
     private lateinit var adapter: NearbyPlaceAdapter
-    private var location = ""
+    private var location = "41.8781,-87.6298"
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init()
@@ -56,7 +53,7 @@ class NearbyPlacesFragment :
 //        getSystemService(Context.LOCATION_SERVICE);
 
         setUpRecyclerView()
-        viewModel.nearbyPlaces()
+        viewModel.nearbyPlaces(location)
     }
 
     private fun checkPermission() {
@@ -77,7 +74,7 @@ class NearbyPlacesFragment :
             } catch (e: Exception) {
                 e.printStackTrace()
             }
-        }else {
+        } else {
             getLocation()
         }
     }
@@ -91,9 +88,10 @@ class NearbyPlacesFragment :
 
     fun getLocation() {
 
-        var locationManager = requireActivity().getSystemService(LOCATION_SERVICE) as LocationManager?
+        var locationManager =
+            requireActivity().getSystemService(LOCATION_SERVICE) as LocationManager?
 
-        var locationListener = object : LocationListener{
+        var locationListener = object : LocationListener {
 
             override fun onLocationChanged(location: Location) {
                 var latitute = location!!.latitude
@@ -113,16 +111,21 @@ class NearbyPlacesFragment :
 
         }
 
-        try {
-            locationManager!!.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
-        } catch (ex:SecurityException) {
-            Toast.makeText(requireContext(), "Fehler bei der Erfassung!", Toast.LENGTH_SHORT).show()
-        }
+//        try {
+//            locationManager!!.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0L, 0f, locationListener)
+//        } catch (ex:SecurityException) {
+//            Toast.makeText(requireContext(), "Fehler bei der Erfassung!", Toast.LENGTH_SHORT).show()
+//        }
     }
 
     private fun setUpRecyclerView() {
         adapter = NearbyPlaceAdapter {
             requireView().showSnackMessage(it)
+            findNavController().navigate(
+                NearbyPlacesFragmentDirections.actionNearbyPlacesFragmentToPlaceDetailFragment(
+                    fsqId = it
+                )
+            )
         }
 
         binding.nearbyPlacesRecycler.adapter = adapter
@@ -140,10 +143,24 @@ class NearbyPlacesFragment :
     }
 
     private fun observers() {
-        collectLifecycleFlow(viewModel.nearbyPlaces) { response ->
-            response.data?.results?.let {
-                if (it.isNotEmpty()) {
-                    adapter.submitList(it)
+        collectLifecycleFlow(viewModel.nearbyPlaces) { state ->
+            when (state) {
+                is Resource.Success -> {
+                    state.data?.let {
+                        binding.progressBar.makeGone()
+                        adapter.submitList(it)
+                    }
+                }
+                is Resource.Loading -> {
+                    binding.progressBar.makeVisible()
+                }
+                is Resource.Error -> {
+                    binding.progressBar.makeGone()
+
+                    if (!state.data.isNullOrEmpty())
+                        adapter.submitList(state.data)
+                    else
+                        requireView().showSnackMessage("خطایی رخ داده است")
                 }
             }
         }

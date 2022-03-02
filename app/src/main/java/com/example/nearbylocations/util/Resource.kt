@@ -1,4 +1,4 @@
-package com.example.nearbylocations.util.response
+package com.example.nearbylocations.util
 
 /**
  * When a service gets called, the response is wrapped by this model.
@@ -6,7 +6,7 @@ package com.example.nearbylocations.util.response
  *
  * @property data the value of response from [T] type.
  */
-sealed class GeneralResponse<T>(val data: T? = null, val message: String? = null) {
+sealed class Resource<T>(val data: T? = null, val throwable: Throwable? = null) {
 
     /**
      * When we get the response successfully.
@@ -14,7 +14,7 @@ sealed class GeneralResponse<T>(val data: T? = null, val message: String? = null
      * @param T the type of response model ex
      * @property data the value of response from [T] type.
      */
-    class Success<T>(data: T) : GeneralResponse<T>(data)
+    class Success<T>(data: T) : Resource<T>(data)
 
     /**
      * When we want to show the loading indicator.
@@ -22,7 +22,7 @@ sealed class GeneralResponse<T>(val data: T? = null, val message: String? = null
      * @param T the type of response model ex
      * @property data the value of response from [T] type.
      */
-    class Loading<T>(data: T? = null) : GeneralResponse<T>(data)
+    class Loading<T>(data: T? = null) : Resource<T>(data)
 
     /**
      * When we have error
@@ -31,12 +31,5 @@ sealed class GeneralResponse<T>(val data: T? = null, val message: String? = null
      * @property data the value of response from [T] type.
      * @param message the exception message
      */
-    class IOError<T>(message: String) : GeneralResponse<T>(message = message)
-
-    /**
-     * When we have an UnAuthorized error
-     *
-     * @param message the exception message
-     */
-    class UnAuthorizeError<T>(message: String) : GeneralResponse<T>(message = message)
+    class Error<T>(data: T?, throwable: Throwable) : Resource<T>(data = data, throwable = throwable)
 }

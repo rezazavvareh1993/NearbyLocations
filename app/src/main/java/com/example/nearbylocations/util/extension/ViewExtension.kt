@@ -43,3 +43,28 @@ fun View.showSnackMessage(message: String) {
 fun View.createSnackBar(message: String): Snackbar {
     return Snackbar.make(this, message, Snackbar.LENGTH_LONG)
 }
+
+
+/**
+ * Makes a view visible.
+ *
+ */
+fun View.makeVisible() {
+    visibility = View.VISIBLE
+}
+
+/**
+ * Makes a view invisible.
+ *
+ */
+fun View.makeInVisible() {
+    visibility = View.INVISIBLE
+}
+
+/**
+ * Makes a view gone.
+ *
+ */
+fun View.makeGone() {
+    visibility = View.GONE
+}

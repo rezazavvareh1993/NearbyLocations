@@ -1,7 +1,7 @@
 package com.example.nearbylocations.di
 
 import android.content.Context
-import com.example.jokerfinder.base.db.MovieDB
+import com.example.nearbylocations.data.local.db.PlaceDataBase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -13,10 +13,11 @@ import javax.inject.Singleton
 @Module
 class RoomModule {
     @Provides
+    @Singleton
     fun provideDataBase(@ApplicationContext appContext: Context) =
-        MovieDB.getDatabase(appContext)
+        PlaceDataBase.getInstance(appContext)
 
     @Singleton
     @Provides
-    fun provideFavoriteMovieDAO(movieDB: MovieDB) = movieDB.favoriteMovieDAO()
+    fun provideFavoriteMovieDAO(placeDataBase: PlaceDataBase) = placeDataBase.placeDAO()
 }
