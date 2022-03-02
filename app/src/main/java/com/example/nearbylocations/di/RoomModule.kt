@@ -13,7 +13,8 @@ import javax.inject.Singleton
 @Module
 class RoomModule {
     @Provides
-    fun provideDataBase(@ApplicationContext appContext: Context) = MovieDB.getDatabase(appContext)
+    fun provideDataBase(@ApplicationContext appContext: Context) =
+        MovieDB.getDatabase(appContext)
 
     @Singleton
     @Provides
